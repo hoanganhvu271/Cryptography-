@@ -1,5 +1,6 @@
 import javax.crypto.*;
 import javax.crypto.spec.IvParameterSpec;
+import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
 
 public class AES {
@@ -15,15 +16,19 @@ public class AES {
         this.paddingType = paddingType;
         this.cipher = Cipher.getInstance("AES/" + mode + "/" + paddingType);
 
-        KeyGenerator keyGen = KeyGenerator.getInstance("AES");
-        keyGen.init(keyLength);
-        this.key = keyGen.generateKey();
+        generateKey(keyLength);
 
         if (mode.equals("CBC")) {
             byte[] iv = new byte[this.cipher.getBlockSize()];
             new java.security.SecureRandom().nextBytes(iv);
             this.ivParams = new IvParameterSpec(iv);
         }
+    }
+
+    private void generateKey(int keyLength) throws Exception {
+        KeyGenerator keyGen = KeyGenerator.getInstance("AES");
+        keyGen.init(keyLength);
+        this.key = keyGen.generateKey();
     }
 
     public String encrypt(String plaintext) throws Exception {

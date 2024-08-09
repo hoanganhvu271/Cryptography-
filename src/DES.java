@@ -14,9 +14,7 @@ public class DES {
         this.paddingType = paddingType;
         this.cipher = Cipher.getInstance("DES/" + mode + "/" + paddingType);
 
-        KeyGenerator keyGen = KeyGenerator.getInstance("DES");
-        keyGen.init(56);
-        this.key = keyGen.generateKey();
+        generateKey();
 
         if (mode.equals("CBC")) {
             byte[] iv = new byte[this.cipher.getBlockSize()];
@@ -25,6 +23,11 @@ public class DES {
         }
     }
 
+    private void generateKey() throws Exception {
+        KeyGenerator keyGen = KeyGenerator.getInstance("DES");
+        keyGen.init(56);
+        this.key = keyGen.generateKey();
+    }
     public String encrypt(String plaintext) throws Exception {
         if (this.mode.equals("CBC")) {
             cipher.init(Cipher.ENCRYPT_MODE, this.key, this.ivParams);
